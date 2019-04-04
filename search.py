@@ -8,12 +8,13 @@ Authors: Chuan Yan
 
 import sys
 import json
+from math import ceil
 from queue import PriorityQueue
 
 # define the class to store the state of Chexers
 class State:
 
-	#optimisation, define possible class attributes reduce memory usage 
+	#optimisation, define possible class attributes reduce memory usage
 	__slots__ = ['color', 'positions', 'blocks', 'parent', 'totalCost', 'currentCost', 'estimatedCost', 'children', 'destination', 'lastAction', 'finished']
 
 	#directions that a piece can move around
@@ -52,10 +53,11 @@ class State:
 			# just a big integer lager than all possible distance
 			temp = 99
 			for [r,q] in self.destination:
-				temp = min(temp, abs(x-r) + abs(y-q))
-			# just make sure the estimation is smaller than the real one
+				#distance formula modified from redblobgames post (https://www.redblobgames.com/grids/hexagons/)
+				temp = min(temp, max(abs(x-r), abs(y-q)), max((-x-r) - (-y-q)))
+			# just make sure the estimation is smaller than the real one, taking possible jumps into account
 			if temp > 2:
-				self.estimatedCost += temp-2
+				self.estimatedCost += ceil(temp/2)
 			else:
 				self.estimatedCost += temp
 		self.totalCost = self.currentCost + self.estimatedCost
