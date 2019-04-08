@@ -10,11 +10,6 @@ import sys
 import json
 from queue import PriorityQueue
 
-nodetest = False
-
-#global node counter
-nodesgen=0
-
 # define the class to store the state of Chexers
 class State:
 
@@ -101,11 +96,6 @@ class State:
 					if [x+r,y+q] not in self.destination:
 						p.append([x+r,y+q])
 
-						#checking number of nodes generated
-						if nodetest:
-							global nodesgen
-							nodesgen = nodesgen + 1
-
 					child = State(self.color, p, self.blocks, self, self.currentCost +1)
 					if not child.isSame(self.parent): #should not be the same as the grandparent
 						# record the last action
@@ -127,11 +117,6 @@ class State:
 					# if next step is not on the destination, append to positions
 					if [x+2*r,y+2*q] not in self.destination:
 						p.append([x+2*r,y+2*q])
-
-						#checking number of nodes generated
-						if nodetest:
-							global nodesgen
-							nodesgen = nodesgen + 1
 
 					child = State(self.color, p, self.blocks, self, self.currentCost +1)
 					if not child.isSame(self.parent): #should not be the same as the grandparent
@@ -175,18 +160,21 @@ def main():
 	queue.put(init)
 	state = None
 	isDone = False
+	nodecount = 1
 	while not queue.empty() and not isDone:
 		state = queue.get()
 		if len(state.positions) == 0:
 			break
-		#print(queue.qsize())
 		state.genChildren()
 		for c in state.getChildren():
+			nodecount += 1
 			queue.put(c)
 			if c.finished:
 				state = c
 				isDone = True
 				break
+
+	print("#nodecount =", nodecount)
 
 
 	queue = []
@@ -206,8 +194,6 @@ def main():
 			print("EXIT from ", s.lastAction[3])
 	stack = []
 
-	if nodetest:
-		print(nodesgen)
 
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':
