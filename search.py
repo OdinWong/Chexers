@@ -8,8 +8,12 @@ Authors: Chuan Yan
 
 import sys
 import json
-from math import ceil
 from queue import PriorityQueue
+
+nodetest = False
+
+#global node counter
+nodesgen=0
 
 # define the class to store the state of Chexers
 class State:
@@ -53,11 +57,10 @@ class State:
 			# just a big integer lager than all possible distance
 			temp = 99
 			for [r,q] in self.destination:
-				#distance formula modified from redblobgames post (https://www.redblobgames.com/grids/hexagons/)
-				temp = min(temp, max(abs(x-r), abs(y-q)), max((-x-r) - (-y-q)))
-			# just make sure the estimation is smaller than the real one, taking possible jumps into account
+				temp = min(temp, abs(x-r) + abs(y-q))
+			# just make sure the estimation is smaller than the real one
 			if temp > 2:
-				self.estimatedCost += ceil(temp/2)
+				self.estimatedCost += temp - min(2, len(self.blocks))
 			else:
 				self.estimatedCost += temp
 		self.totalCost = self.currentCost + self.estimatedCost
@@ -98,6 +101,10 @@ class State:
 					if [x+r,y+q] not in self.destination:
 						p.append([x+r,y+q])
 
+						#checking number of nodes generated
+						if nodetest:
+							global nodesgen
+							nodesgen = nodesgen + 1
 
 					child = State(self.color, p, self.blocks, self, self.currentCost +1)
 					if not child.isSame(self.parent): #should not be the same as the grandparent
@@ -121,6 +128,10 @@ class State:
 					if [x+2*r,y+2*q] not in self.destination:
 						p.append([x+2*r,y+2*q])
 
+						#checking number of nodes generated
+						if nodetest:
+							global nodesgen
+							nodesgen = nodesgen + 1
 
 					child = State(self.color, p, self.blocks, self, self.currentCost +1)
 					if not child.isSame(self.parent): #should not be the same as the grandparent
@@ -195,6 +206,8 @@ def main():
 			print("EXIT from ", s.lastAction[3])
 	stack = []
 
+	if nodetest:
+		print(nodesgen)
 
 # when this module is executed, run the `main` function:
 if __name__ == '__main__':
