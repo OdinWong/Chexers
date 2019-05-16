@@ -45,12 +45,12 @@ class ExamplePlayer:
 				bestAction = s.lastAction
 			# in the occasion that utilities of A player are the same,
 			# we should consider the one that has largest advance than enemies
-			# elif utilities[id] == maxUtilities[id]:
-				# diffCrt = (maxUtilities[id]-maxUtilities[(id-1)%self.N]) + (maxUtilities[id]-maxUtilities[(id+1)%self.N])
-				# diffNext = (utilities[id]-utilities[(id-1)%self.N]) + (utilities[id]-utilities[(id+1)%self.N])
-				# if diffCrt < diffNext:
-					# maxUtilities = utilities
-					# bestAction = s.lastAction
+			elif utilities[id] == maxUtilities[id]:
+				diffCrt = (maxUtilities[id]-maxUtilities[(id-1)%self.N]) + (maxUtilities[id]-maxUtilities[(id+1)%self.N])
+				diffNext = (utilities[id]-utilities[(id-1)%self.N]) + (utilities[id]-utilities[(id+1)%self.N])
+				if diffCrt < diffNext:
+					maxUtilities = utilities
+					bestAction = s.lastAction
 		return [maxUtilities, bestAction]
 		
 	def action(self):
