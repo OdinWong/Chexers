@@ -67,9 +67,10 @@ class ExamplePlayer:
 		# TODO: Decide what action to take.
 		
 		#action = self.maxN(self.state, self.id, 0)[1]
-		nextStates = self.state.genNextStates(self.id)
-		idx = int(len(nextStates)/2)
-		return nextStates[idx].lastAction
+		action = self.maxN(self.state, self.id, 0)[1]
+		#nextStates = self.state.genNextStates(self.id)
+		#idx = int(len(nextStates)/2)
+		return action
 
 
 	def update(self, colour, action):
